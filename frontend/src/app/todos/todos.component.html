@@ -1,0 +1,44 @@
+<section class="heading-section">
+    <h1 class="title">
+        Todos
+    </h1>
+</section>
+
+<div class="container add-todo-box-container">
+    <div class="add-todo-box">
+        <form #todoForm="ngForm" (submit)="addTodo()">
+        <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Enter the todo here......"
+                    name="inputTodo" [(ngModel)]="inputTodo">
+                <div class="input-group-append">
+                <button [disabled]="inputTodo ==='' " type="submit" class="btn btn-info">Add Todo</button>
+                </div>
+        </div>
+        </form>
+    </div>
+</div>
+<section class="section">
+    <div class="container">
+  
+      <div class="todos-list">
+        
+       <div *ngFor="let todo of todos;let i=index;" class="todo {{(todo.Completed === 1 ? 'done':'')}}">
+            <button class=" btn checkbox " (click)="toggleDone(todo)">&#10003;</button>
+            <div class="content" (click)="toggleDone(todo)">{{todo.Content}}</div>
+            <button class="btn btn-info" appToolTip="Edit Todo" (click)="open(todo)">
+                <svg class="edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M11.013 1.427a1.75 1.75 0 012.474 0l1.086 1.086a1.75 1.75 0 010 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 01-.927-.928l.929-3.25a1.75 1.75 0 01.445-.758l8.61-8.61zm1.414 1.06a.25.25 0 00-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 000-.354l-1.086-1.086zM11.189 6.25L9.75 4.81l-6.286 6.287a.25.25 0 00-.064.108l-.558 1.953 1.953-.558a.249.249 0 00.108-.064l6.286-6.286z"></path></svg>
+            </button>
+            <button class="btn btn-danger" (click)="deleteTodo(todo.ID)">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                  </svg>
+                  <!--<img class="icon" src="../assets/trash.svg">-->
+            </button>
+       </div>
+  
+      </div>
+  
+    </div>
+  </section>
+

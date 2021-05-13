@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h4 class="modal-title">Edit Todo</h4>
+    <button type="button" class="btn btn-info" aria-label="Close" (click)="activeModal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+  <div class="modal-body">
+    <form (submit)="updateTodo()">
+        <div class="input-group mb-3">
+                <input type="text" class="form-control"
+                    name="content" [(ngModel)]="content">
+                <div class="input-group-append">
+                <button type="submit" class="btn btn-info" (click)="activeModal.dismiss()" (click)="addMe()">Save</button>
+                </div>
+        </div>
+        </form>
+  </div>
+ 
