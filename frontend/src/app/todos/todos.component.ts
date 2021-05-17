@@ -39,16 +39,23 @@ export class TodosComponent implements OnInit{
     else {
       updatedTodo.Completed = false;
     }
-    setTimeout(()=>{
-      this._dataservice.updateTodo(updatedTodo)
+    //setTimeout(()=>{
+      let updatingTodo = new Promise((resolve,reject)=>{
+        this._dataservice.updateTodo(updatedTodo)
           .subscribe(
-            response =>console.log('Success!',response),
-            error => console.log('error',error)
-          );
-          setTimeout(()=>{
-            this.retriveTodos();
-        },200);
-    },200);
+            response =>{console.log('Success!',response);return resolve(response)},
+            error => {console.log('error',error);return reject(error);}
+          ); });
+        //   setTimeout(()=>{
+        //     this.retriveTodos();
+        // },200);
+        updatingTodo.then(()=>{
+          this.retriveTodos();
+        });
+        updatingTodo.catch((error)=>{
+          console.log("Error occured while deleting the data");
+        });
+    //},200);
     // this.todos.map((v:any,i:any)=>{
     //   if(i===id) {
     //     //v.completed = !v.completed;
@@ -64,14 +71,23 @@ export class TodosComponent implements OnInit{
   }
   deleteTodo(id:number){
     //this.todos = this.todos.filter((v,i)=>i!=id);
-    this._dataservice.deleteTodo(id)
+    let deletingTodo = new Promise((resolve,reject)=>{ 
+      this._dataservice.deleteTodo(id)
         .subscribe(
-          response =>console.log('Success!',response),
-          error => console.log('error',error)
+          response =>{console.log('Success!',response);return resolve(response)},
+          error => {console.log('error',error);return reject(error);}
         );
-        setTimeout(()=>{
-          this.retriveTodos();
-      },200);
+      });
+      //   setTimeout(()=>{
+      //     this.retriveTodos();
+      // },200);
+      deletingTodo.then(()=>{
+        this.retriveTodos();
+      });
+      deletingTodo.catch((error)=>{
+        console.log("Error occured while deleting the data");
+      });
+      
   }
   addTodo(){
     let length = Object.keys(this.todos).length + 1;
@@ -84,17 +100,28 @@ export class TodosComponent implements OnInit{
     console.log(todo);
     //let todo = new Todo(this.length.toString(),this.inputTodo,completed.toString());
     
-    this._dataservice.addTodo(todo)
+    let addingTodo = new Promise((resolve,reject)=>{
+      this._dataservice.addTodo(todo)
         .subscribe(
-          response =>console.log('Success!',response),
-          error => console.log('error',error)
+          // response =>console.log('Success!',response),
+          // error => console.log('error',error)
+          response => resolve(response),
+          error => reject(error)
         );
+      })
         
     //this._dataservice.addTodo(this.inputTodo);
     this.inputTodo = "";
-    setTimeout(()=>{
-      this.retriveTodos();
-  },200);
+  //   setTimeout(()=>{
+  //     this.retriveTodos();
+  // },200);
+  addingTodo.then((response)=>{
+    console.log('Success!',response);
+    this.retriveTodos();
+  })
+  addingTodo.catch((error)=>{
+    console.log('Success!',error);
+  })
     
   }
   
