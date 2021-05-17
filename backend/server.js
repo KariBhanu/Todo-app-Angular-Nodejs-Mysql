@@ -16,54 +16,92 @@ app.get('/',function(req,res){
 app.post('/addTodo', (req, res) => {
    console.log(req.body);
    let todo = req.body;
-   mysqlConnection.query('INSERT INTO todolist VALUES (?,?,?)', [todo.ID,todo.Content,todo.Completed],
-    (err, rows, fields) => {
-            if (!err)
-                {setTimeout(()=>{
-                    res.send({"message":"Data Added Successful"});
-                },1000);}
-            else
-                console.log(err);
-        }) 
+   let addTodo = new Promise((resolve,reject)=>{
+        mysqlConnection.query('INSERT INTO todolist VALUES (?,?,?)', [todo.ID,todo.Content,todo.Completed],
+        (err, rows, fields) => {
+                if (!err){resolve();}
+                    // {setTimeout(()=>{
+                    //     res.send({"message":"Data Added Successful"});
+                    // },1000);}
+                else{reject(err)}
+                    //console.log(err);
+            }); 
+   });
+   addTodo.then(()=>{
+        res.send({"message":"Data Added Successful"});
+   });
+   addTodo.catch((err)=>{
+        console.log(err);
+   })
 });
 //read
 app.get('/getTodos',(req,res)=>{
-    mysqlConnection.query('SELECT * FROM todolist', (err, rows, fields) => {
-        if (!err)
-            res.send(rows);
-        else
-            console.log(err);
-    })
+   let getTodos = new Promise((resolve,reject)=>{
+        mysqlConnection.query('SELECT * FROM todolist', (err, rows, fields) => {
+            if (!err){resolve(rows);}
+                //res.send(rows);
+            else{reject(err)}
+                //console.log(err);
+        });
+   });
+   getTodos.then((rows)=>{
+    res.send(rows);
+   })
+   getTodos.catch((err)=>{
+    console.log(err);
+   })   
 })
 
 //update
 app.put('/update', (req, res) => {
     let todo = req.body;
     var sql = "UPDATE todolist SET Content = ?, Completed = ? WHERE ID = ?;";
-    mysqlConnection.query(sql, [todo.Content,todo.Completed,todo.ID], (err, rows, fields) => {
-        if (!err)
-            {setTimeout(()=>{
-                res.send({"message":"Data Updated Successful"})
-            },1000);}
-        else
-            console.log(err);
-    })
+    let updateTodo = new Promise((resolve,reject)=>{
+        mysqlConnection.query(sql, [todo.Content,todo.Completed,todo.ID], (err, rows, fields) => {
+            if (!err){resolve()}
+                // {setTimeout(()=>{
+                //     res.send({"message":"Data Updated Successful"})
+                // },1000);}
+            else{reject(err)}
+                //console.log(err);
+        })
+    });
+    updateTodo.then(()=>{
+        res.send({"message":"Data Updated Successful"});
+       })
+    updateTodo.catch((err)=>{
+        console.log(err);
+       }) 
+    
     console.log(todo);
 });
 
 //delete
 app.delete('/remove/:id',(req,res)=>{
     console.log(req.params.id);
+    // let deleteTodo = new Promise((resolve,reject)=>{
+
+    // });
     mysqlConnection.query('DELETE FROM todolist WHERE ID = ?', [req.params.id], (err, rows, fields) => {
                 if (!err)
-                   {mysqlConnection.query('UPDATE todolist SET ID = ID-1 WHERE ID > ?', [req.params.id], (err, rows, fields) => {
-                    if (!err)
-                       {setTimeout(()=>{
-                            res.send({"message":"Data Deleted Successful"})
-                        },1000);}
-                    else
+                   {
+                    let updatingIds = new Promise((resolve,reject)=>{
+                        mysqlConnection.query('UPDATE todolist SET ID = ID-1 WHERE ID > ?', [req.params.id], (err, rows, fields) => {
+                            if (!err){resolve()}
+                            // {setTimeout(()=>{
+                            //         res.send({"message":"Data Deleted Successful"})
+                            //     },1000);}
+                            else{reject(err)}
+                               // console.log(err);
+                        });
+                    });
+                    updatingIds.then(()=>{
+                        res.send({"message":"Data Deleted Successful"});
+                       });
+                    updatingIds.catch((err)=>{
                         console.log(err);
-                })}
+                       }); 
+            }
                 else
                     console.log(err);
             })
