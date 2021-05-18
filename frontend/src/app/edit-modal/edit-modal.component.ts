@@ -20,6 +20,7 @@ export class EditModalComponent implements OnInit {
   addMe() {
     this.emitService.next("Hello from modal");
 }
+//test perpose add
   updateTodo(){
     const updatedTodo = {...this.todo};
     updatedTodo.Content = this.content;
